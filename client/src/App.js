@@ -33,19 +33,19 @@ const App = () => {
 
   return (
     <div className="app">
-      <div className="app_body">
-        <Router>
-          <Switch>
-            <Route exact path="/">
-              <SignUp />
-            </Route>
-            <Route path="/rooms/:roomId">
+      <Router>
+        <Switch>
+          <Route exact path="/">
+            <SignUp />
+          </Route>
+          <Route path="/rooms/:roomId">
+            <div className="app_body">
               <Sidebar />
               <Chat messages={messages} setMessages={setMessages} />
-            </Route>
-          </Switch>
-        </Router>
-      </div>
+            </div>
+          </Route>
+        </Switch>
+      </Router>
     </div>
   );
 };

@@ -1,0 +1,136 @@
+.register_page {
+  margin: auto;
+  background-color: #dadbd3;
+}
+
+.register {
+  border-radius: 20px;
+  margin: auto;
+  width: 100%;
+  text-align: left;
+  background-color: white;
+  padding: 15px;
+  color: rgb(41, 41, 40);
+  box-shadow: 1px 1px 10px rgb(0, 0, 0, 0.2), -1px -1px 10px rgb(0, 0, 0, 0.2);
+}
+
+.register > h2 {
+  font-weight: 600;
+  font-family: sans-serif;
+  text-transform: capitalize;
+  margin-left: 8px;
+}
+
+.register__form {
+  display: flex;
+  flex-direction: column;
+  padding: 10px 0 0 10px;
+}
+
+.register__form > input {
+  max-width: 85%;
+  padding: 10px 0;
+  font-weight: 2px;
+  outline: none;
+  border: none;
+  border-bottom: 1px solid grey;
+  color: rgba(0, 0, 0, 0.7) !important;
+  background-color: inherit;
+}
+
+.register__form > input:focus {
+  border-bottom: 1px solid rgb(175, 206, 113);
+  transition: border-bottom 0.3s ease-out;
+}
+
+/*  file input styling */
+.register__form > .container {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 100%;
+  margin-top: 10px;
+}
+
+input[type="file"] {
+  position: absolute;
+  z-index: -1;
+  top: 10px;
+  left: 8px;
+  font-size: 17px;
+  color: #b8b8b8;
+}
+
+.button-wrap {
+  position: relative;
+}
+
+.container > .button-wrap > .button {
+  display: inline-block;
+  padding: 12px 18px;
+  cursor: pointer;
+  border-radius: 5px;
+  background-color: rgb(175, 206, 113);
+  font-size: 16px;
+  font-weight: bold;
+  color: #fff;
+}
+
+.register__form > p {
+  font-weight: 500;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.register__form > p > span {
+  color: rgb(246, 69, 69);
+  text-transform: lowercase;
+}
+
+.register__form > button {
+  width: 85%;
+  margin: 10px 0;
+  padding: 10px;
+  outline: none;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+  color: rgb(164, 209, 75);
+  background-color: initial;
+  font-weight: 800;
+  border: 2px solid rgb(175, 206, 113);
+  border-radius: 10px;
+}
+
+.register__form > button:hover {
+  background-color: rgb(175, 206, 113);
+  color: white;
+}
+
+.login__user {
+  padding: 20px;
+  padding-left: 0;
+  padding-top: 0;
+  margin-left: 15px;
+  font-size: 14px;
+  color: gray;
+}
+
+.login__user__login {
+  padding: 10px;
+  text-decoration: none;
+  color: rgb(175, 206, 113);
+}
+
+.login__user__login:hover {
+  color: rgb(41, 41, 40);
+}
+
+@media screen and (max-width: 800px) {
+  .register {
+    width: fit-content;
+  }
+  .register__form {
+    padding: 10px 10px 0 10px;
+  }
+}

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import "./App.css";
 
-import { SignUp, Chat, Sidebar } from "./components";
+import { SignUp, SignIn, Chat, Sidebar } from "./components";
 
 import axios from "./axios";
 import Pusher from "pusher-js";
@@ -35,9 +35,8 @@ const App = () => {
     <div className="app">
       <Router>
         <Switch>
-          <Route exact path="/">
-            <SignUp />
-          </Route>
+          <Route exact path="/signup" component={SignUp} />
+          <Route exact path="/signin" component={SignIn} />
           <Route path="/rooms/:roomId">
             <div className="app_body">
               <Sidebar />

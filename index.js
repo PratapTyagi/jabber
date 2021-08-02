@@ -51,7 +51,7 @@ db.once("open", () => {
 const PORT = process.env.PORT || 5000;
 
 const CONNECTION_URL =
-  "mongodb+srv://admin:6ZlHjPrLOolHS0Y9@cluster0.jrvmf.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+  "mongodb+srv://admin:1RyXYdOqVKj8yFSO@cluster0.y1kf2.mongodb.net/chat-app?retryWrites=true&w=majority";
 
 // Building connection
 mongoose

@@ -11,17 +11,22 @@ import axios from "../../axios";
 
 const Sidebar = () => {
   const [rooms, setrooms] = useState([]);
+  const token = JSON.parse(localStorage.getItem("currentUser")).token;
 
   useEffect(() => {
     const apiReq = async () => {
-      const { data } = await axios.get("/rooms/sync");
+      const { data } = await axios.get("/rooms/sync", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       return data;
     };
 
     apiReq()
       .then((info) => setrooms(info))
       .catch((err) => console.log(err));
-  }, []);
+  }, [rooms]);
 
   return (
     <div className="sidebar">

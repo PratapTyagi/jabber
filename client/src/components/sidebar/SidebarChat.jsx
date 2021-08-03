@@ -5,13 +5,23 @@ import "./SidebarChat.css";
 import { Link } from "react-router-dom";
 
 const SidebarChat = ({ addNewChat, room }) => {
+  const token = JSON.parse(localStorage.getItem("currentUser")).token;
+
   const createChat = async () => {
     const fetchedName = prompt("Enter the name of room");
     if (fetchedName) {
       await axios
-        .post("/rooms/new", {
-          name: fetchedName,
-        })
+        .post(
+          "/rooms/new",
+          {
+            name: fetchedName,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
         .catch((err) => console.log(err));
     }
   };
@@ -25,11 +35,7 @@ const SidebarChat = ({ addNewChat, room }) => {
   ) : (
     <Link to={`/rooms/${room._id}`} style={{ textDecoration: "none" }}>
       <div className="sidebarChat">
-        <Avatar
-          src={`https://avatars.dicebear.com/api/human/${
-            Math.random() * 5000
-          }.svg`}
-        />
+        <Avatar src={room.pic} />
         <div className="sidebarChat_right">
           <h2>{room.name}</h2>
           <p>Last Message</p>

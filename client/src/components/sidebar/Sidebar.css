@@ -62,3 +62,14 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+.icon__form {
+  margin-left: 8px !important;
+  padding-bottom: 22px !important;
+  width: 20px;
+  height: 20px;
+}
+
+#demo-controlled-open-select {
+  padding-right: 0 !important;
+}

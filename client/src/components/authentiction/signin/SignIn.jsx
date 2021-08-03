@@ -1,11 +1,10 @@
 import { useState } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import axios from "axios";
 
 const SignIn = () => {
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
-  const history = useHistory();
 
   const login = async (e) => {
     e.preventDefault();
@@ -44,7 +43,7 @@ const SignIn = () => {
       alert(message ? message : error);
       localStorage.setItem("currentUser", JSON.stringify(user));
 
-      history.push("/rooms/222");
+      window.location.href = "/";
     } catch (error) {
       console.log(error);
     }

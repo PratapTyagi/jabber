@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { SignUp, SignIn, Chat, Sidebar } from "./components";
+import { SignUp, SignIn, DefaultChat, Chat, Sidebar } from "./components";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 import Pusher from "pusher-js";
@@ -36,7 +36,12 @@ export const Routing = () => {
         <Switch>
           {currentUser ? (
             <>
-              <Route exact path="/" component={Sidebar} />
+              <Route exact path="/">
+                <div className="app_body">
+                  <Sidebar />
+                  <DefaultChat />
+                </div>
+              </Route>
               <Route path="/rooms/:roomId">
                 <div className="app_body">
                   <Sidebar />

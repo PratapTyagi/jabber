@@ -1,5 +1,7 @@
 import User from "../models/userModel.js";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import keys from "../config/keys.js";
 
 export const registerUser = (req, res) => {
   const { name, email, password, pic } = req.body;
@@ -39,10 +41,12 @@ export const loginUser = (req, res) => {
         .compare(password, savedUser.password)
         .then((doMatch) => {
           if (doMatch) {
+            const token = jwt.sign({ _id: savedUser._id }, keys.JWT_SECRET);
             const { _id, name, email, pic } = savedUser;
             return res.json({
               user: { _id, name, email, pic },
               message: "Successfully Logged In",
+              token,
             });
           } else {
             return res.json({ error: "Invalid email or password" });

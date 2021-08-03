@@ -1,35 +1,56 @@
-import roomsModel from "../models/roomsModel.js";
+import Rooms from "../models/roomsModel.js";
+import User from "../models/userModel.js";
 
-export const createRoom = async (req, res) => {
-  const { name } = req.body;
+export const createRoom = (req, res) => {
+  const { name, pic } = req.body;
 
-  const data = new roomsModel({
+  const data = new Rooms({
     name,
+    pic,
+    members: req.user._id,
   });
 
   try {
-    await data.save();
-
-    res.status(201).json(data);
+    data
+      .save()
+      .then((room) => {
+        User.findByIdAndUpdate(
+          req.user._id,
+          {
+            $push: { rooms: room._id },
+          },
+          { new: true }
+        ).exec((err, result) => {
+          if (err) {
+            return res.json({ error: err });
+          } else {
+            return res.json(result);
+          }
+        });
+      })
+      .catch((err) => console.log(err));
   } catch (error) {
     res.status(500).send(error);
   }
 };
 
-export const getRooms = async (req, res) => {
+export const getRooms = (req, res) => {
   try {
-    const data = await roomsModel.find();
-    res.status(200).send(data);
+    Rooms.find({ members: { $in: req.user._id } })
+      .then((room) => {
+        res.status(200).send(room);
+      })
+      .catch((err) => console.log(err));
   } catch (error) {
     res.status(400).send(error);
   }
 };
 
-export const getRoomWithId = async (req, res) => {
+export const getRoomWithId = (req, res) => {
   try {
-    const room = await roomsModel.findOne({ _id: req.params.id });
+    const room = roomsModel.findOne({ _id: req.params.id });
     res.status(200).send(room);
   } catch (error) {
-    res.status(500).send(room);
+    res.status(500).send(error);
   }
 };

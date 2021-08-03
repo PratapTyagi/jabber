@@ -44,9 +44,8 @@ export const loginUser = (req, res) => {
             const token = jwt.sign({ _id: savedUser._id }, keys.JWT_SECRET);
             const { _id, name, email, pic } = savedUser;
             return res.json({
-              user: { _id, name, email, pic },
+              user: { _id, name, email, pic, token },
               message: "Successfully Logged In",
-              token,
             });
           } else {
             return res.json({ error: "Invalid email or password" });

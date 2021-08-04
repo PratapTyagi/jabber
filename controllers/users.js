@@ -1,4 +1,5 @@
 import User from "../models/userModel.js";
+import Room from "../models/roomsModel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import keys from "../config/keys.js";
@@ -54,4 +55,43 @@ export const loginUser = (req, res) => {
         .catch((err) => console.log(err));
     })
     .catch((err) => res.json({ error: "Server Error" }));
+};
+
+export const getAllUsers = (req, res) => {
+  User.find({ _id: { $ne: req.user._id } })
+    .select("-password -rooms -__v")
+    .then((users) => {
+      res.json(users);
+    })
+    .catch((err) => console.log(err));
+};
+
+export const addUser = (req, res) => {
+  const { roomId, userId } = req.body;
+
+  Room.findByIdAndUpdate(
+    roomId,
+    {
+      $push: { members: userId },
+    },
+    { new: true }
+  ).exec((err, result) => {
+    if (err) {
+      console.log(err);
+    } else {
+      User.findByIdAndUpdate(
+        userId,
+        {
+          $push: { rooms: roomId },
+        },
+        { new: true }
+      ).exec((err, result) => {
+        if (err) {
+          return res.json({ error: err });
+        } else {
+          return res.json(result);
+        }
+      });
+    }
+  });
 };

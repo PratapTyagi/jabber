@@ -1,10 +1,15 @@
 import { useState, useEffect } from "react";
 
-import { Avatar, IconButton } from "@material-ui/core";
+import {
+  Avatar,
+  FormControl,
+  IconButton,
+  MenuItem,
+  Select,
+} from "@material-ui/core";
 import {
   SearchOutlined,
   AttachFile,
-  MoreVert,
   Mic,
   InsertEmoticon,
   Send,
@@ -16,9 +21,20 @@ import axios from "../../axios";
 import { useParams } from "react-router-dom";
 
 const Chat = ({ messages, setMessages }) => {
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
   const [input, setinput] = useState("");
   const { roomId } = useParams();
   const [roomName, setRoomName] = useState("");
+  const [open, setOpen] = useState(false);
+  const [users, setUsers] = useState([]);
+  const [openButton, setOpenButton] = useState(false);
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+  const handleOpen = () => {
+    setOpen(true);
+  };
 
   useEffect(() => {
     if (roomId)
@@ -28,9 +44,37 @@ const Chat = ({ messages, setMessages }) => {
         .catch((error) => console.error(error));
   }, [roomId]);
 
+  const getAllUsers = async (e) => {
+    e.preventDefault();
+    await axios
+      .get("/users/allusers", {
+        headers: {
+          Authorization: `Bearer ${currentUser.token}`,
+        },
+      })
+      .then(({ data }) => setUsers(data))
+      .catch((err) => console.log(err));
+  };
+
+  const addUser = async (userId) => {
+    const res = await axios.post(
+      "/users/addUser",
+      {
+        roomId,
+        userId,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${currentUser.token}`,
+        },
+      }
+    );
+    console.log(res);
+  };
+
   const sendMessage = async (e) => {
     await axios.post("/messages/new", {
-      username: "Rajeev Tyagi",
+      username: currentUser.name,
       message: input,
       timestamp: "2/2/12",
       received: false,
@@ -56,9 +100,45 @@ const Chat = ({ messages, setMessages }) => {
           <IconButton>
             <AttachFile />
           </IconButton>
-          <IconButton>
-            <MoreVert />
-          </IconButton>
+          <FormControl className="icon__form" onClick={getAllUsers}>
+            <Select
+              labelId="demo-controlled-open-select-label"
+              id="demo-controlled-open-select"
+              open={open}
+              onClose={handleClose}
+              onOpen={handleOpen}
+            >
+              <MenuItem value="">
+                <strong className="addUsers">Add Users</strong>
+              </MenuItem>
+
+              {users.map((user) => (
+                <MenuItem key={user._id} className="addUsers__item">
+                  <div className="addUsers__item__left">
+                    <Avatar
+                      src={user.pic}
+                      alt="Dp"
+                      className="addUsers__item__avatar"
+                    />
+                    <div className="center">
+                      <h4>{user.name}</h4>
+                      <p>{user.email}</p>
+                    </div>
+                  </div>
+                  {!openButton ? (
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        addUser(user._id);
+                      }}
+                    >
+                      Add
+                    </button>
+                  ) : null}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         </div>
       </div>
 

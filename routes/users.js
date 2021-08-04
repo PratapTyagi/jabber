@@ -13,7 +13,7 @@ import userAuthenticated from "../middlewares/userAuthenticated/userAuthenticate
 
 router.post("/register", registerUser);
 router.post("/login", loginUser);
-router.get("/allusers", userAuthenticated, getAllUsers);
+router.post("/allusers", userAuthenticated, getAllUsers);
 router.post("/adduser", userAuthenticated, addUser);
 
 export default router;

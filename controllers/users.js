@@ -58,10 +58,17 @@ export const loginUser = (req, res) => {
 };
 
 export const getAllUsers = (req, res) => {
-  User.find({ _id: { $ne: req.user._id } })
-    .select("-password -rooms -__v")
-    .then((users) => {
-      res.json(users);
+  Room.findById(req.body.roomId)
+    .then((room) => {
+      User.find({ _id: { $ne: req.user._id } })
+        .select("-password -rooms -__v")
+        .then((users) => {
+          const result = users.filter(
+            (item) => !room.members.includes(item._id)
+          );
+          res.json(result);
+        })
+        .catch((err) => console.log(err));
     })
     .catch((err) => console.log(err));
 };

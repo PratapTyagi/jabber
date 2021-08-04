@@ -47,29 +47,35 @@ const Chat = ({ messages, setMessages }) => {
   const getAllUsers = async (e) => {
     e.preventDefault();
     await axios
-      .get("/users/allusers", {
-        headers: {
-          Authorization: `Bearer ${currentUser.token}`,
-        },
-      })
+      .post(
+        "/users/allusers",
+        { roomId },
+        {
+          headers: {
+            Authorization: `Bearer ${currentUser.token}`,
+          },
+        }
+      )
       .then(({ data }) => setUsers(data))
       .catch((err) => console.log(err));
   };
 
   const addUser = async (userId) => {
-    const res = await axios.post(
-      "/users/addUser",
-      {
-        roomId,
-        userId,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${currentUser.token}`,
+    await axios
+      .post(
+        "/users/addUser",
+        {
+          roomId,
+          userId,
         },
-      }
-    );
-    console.log(res);
+        {
+          headers: {
+            Authorization: `Bearer ${currentUser.token}`,
+          },
+        }
+      )
+      .then((res) => setOpenButton(true))
+      .catch((err) => console.log(err));
   };
 
   const sendMessage = async (e) => {

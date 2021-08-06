@@ -14,6 +14,12 @@ const schema = mongoose.Schema({
       ref: "usercontents",
     },
   ],
+  messages: [
+    {
+      type: ObjectId,
+      ref: "messagecontents",
+    },
+  ],
 });
 
 export default mongoose.model("roomcontents", schema);

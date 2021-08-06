@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 
 import {
   Avatar,
@@ -15,12 +16,12 @@ import {
   Send,
 } from "@material-ui/icons";
 
-import "./Chat.css";
 import axios from "../../axios";
+import Pusher from "pusher-js";
 
-import { useParams } from "react-router-dom";
+import "./Chat.css";
 
-const Chat = ({ messages, setMessages }) => {
+const Chat = () => {
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
   const [input, setinput] = useState("");
   const { roomId } = useParams();
@@ -28,6 +29,7 @@ const Chat = ({ messages, setMessages }) => {
   const [open, setOpen] = useState(false);
   const [users, setUsers] = useState([]);
   const [openButton, setOpenButton] = useState(false);
+  const [messages, setMessages] = useState([]);
 
   const handleClose = () => {
     setOpen(false);
@@ -36,6 +38,7 @@ const Chat = ({ messages, setMessages }) => {
     setOpen(true);
   };
 
+  // Room names
   useEffect(() => {
     if (roomId)
       axios
@@ -44,6 +47,7 @@ const Chat = ({ messages, setMessages }) => {
         .catch((error) => console.error(error));
   }, [roomId]);
 
+  // All user instead of members in room
   const getAllUsers = async (e) => {
     e.preventDefault();
     await axios
@@ -60,6 +64,7 @@ const Chat = ({ messages, setMessages }) => {
       .catch((err) => console.log(err));
   };
 
+  // Add user in room
   const addUser = async (userId) => {
     await axios
       .post(
@@ -79,15 +84,44 @@ const Chat = ({ messages, setMessages }) => {
   };
 
   const sendMessage = async (e) => {
+    e.preventDefault();
     await axios.post("/messages/new", {
       username: currentUser.name,
       message: input,
       timestamp: "2/2/12",
       received: false,
+      roomId,
     });
 
     setinput("");
   };
+
+  // Pusher working
+
+  // All messages
+  useEffect(() => {
+    axios
+      .post("/messages/sync", { roomId })
+      .then(({ data }) => setMessages(data))
+      .catch((err) => console.log(err));
+  }, [roomId]);
+
+  useEffect(() => {
+    var pusher = new Pusher("3203ea64068316222fee", {
+      cluster: "ap2",
+    });
+
+    var channel = pusher.subscribe("messages");
+    channel.bind("inserted", function (newMessage) {
+      console.log(newMessage);
+    });
+
+    // Clean up function
+    return () => {
+      channel.unbind_all();
+      channel.unsubscribe();
+    };
+  }, [messages]);
 
   return (
     <div className="chat">
@@ -163,14 +197,14 @@ const Chat = ({ messages, setMessages }) => {
 
       <div className="chat_footer">
         <InsertEmoticon />
-        <form>
+        <form onSubmit={sendMessage}>
           <input
             type="text"
             value={input}
             onChange={(e) => setinput(e.target.value)}
             placeholder="Type a message"
           />
-          <button type="submit" onClick={sendMessage}>
+          <button type="submit">
             <Send />
           </button>
         </form>

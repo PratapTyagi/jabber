@@ -107,13 +107,13 @@ const Chat = () => {
   }, [roomId]);
 
   useEffect(() => {
-    var pusher = new Pusher("3203ea64068316222fee", {
+    const pusher = new Pusher("3203ea64068316222fee", {
       cluster: "ap2",
     });
 
-    var channel = pusher.subscribe("messages");
+    const channel = pusher.subscribe("messages");
     channel.bind("inserted", function (newMessage) {
-      console.log(newMessage);
+      setMessages([...messages, newMessage]);
     });
 
     // Clean up function

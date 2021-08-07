@@ -83,13 +83,20 @@ const Chat = () => {
 
   const sendMessage = async (e) => {
     e.preventDefault();
+    let timestamp = new Date();
+    timestamp =
+      (timestamp.getHours() > 12
+        ? timestamp.getHours() - 12
+        : timestamp.getHours()) +
+      ":" +
+      timestamp.getMinutes() +
+      (timestamp.getHours > 12 ? "PM" : "AM");
     await axios.post(
       "/messages/new",
       {
         username: currentUser.name,
         message: input,
-        timestamp: "2/2/12",
-        received: false,
+        timestamp,
         roomId,
       },
       {
@@ -201,9 +208,13 @@ const Chat = () => {
         {messages.map((m) => (
           <p
             key={m._id}
-            className={`chat_message ${m.received && "chat_receiver"}`}
+            className={`chat_message ${
+              m.received === currentUser._id && "chat_receiver"
+            }`}
           >
-            <span className="chat_name">{m.username}</span>
+            {m.received != currentUser._id && (
+              <span className="chat_name">{m.username}</span>
+            )}
             {m.message}
             <span className="chat_timestamp">{m.timestamp}</span>
           </p>

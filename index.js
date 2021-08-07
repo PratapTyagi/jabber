@@ -30,16 +30,12 @@ const db = mongoose.connection;
 db.once("open", () => {
   const msgCollection = db.collection("messagecontents");
   const changeStream = msgCollection.watch();
-
   changeStream.on("change", (change) => {
     if (change.operationType === "insert") {
       const messageDetails = change.fullDocument;
-      pusher.trigger("messages", "inserted", {
-        name: messageDetails.username,
-        message: messageDetails.message,
-        timestamp: messageDetails.timestamp,
-        received: messageDetails.received,
-      });
+      pusher
+        .trigger("messages", "inserted", messageDetails)
+        .catch((err) => console.log(err));
     }
   });
 });

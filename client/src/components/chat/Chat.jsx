@@ -25,7 +25,7 @@ const Chat = () => {
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
   const [input, setinput] = useState("");
   const { roomId } = useParams();
-  const [roomName, setRoomName] = useState("");
+  const [room, setRoom] = useState({});
   const [open, setOpen] = useState(false);
   const [users, setUsers] = useState([]);
   const [openButton, setOpenButton] = useState(false);
@@ -38,14 +38,12 @@ const Chat = () => {
     setOpen(true);
   };
 
-  // Room names
+  // Room info
   useEffect(() => {
-    if (roomId)
-      axios
-        .get(`/rooms/sync/${roomId}`)
-        .then(({ data }) => setRoomName(data.name))
-        .catch((error) => console.error(error));
-  }, [roomId]);
+    const rooms = JSON.parse(localStorage.getItem("rooms"));
+    const data = rooms.filter((e) => e._id === roomId);
+    setRoom(data[0]);
+  }, []);
 
   // All user instead of members in room
   const getAllUsers = async (e) => {
@@ -85,13 +83,21 @@ const Chat = () => {
 
   const sendMessage = async (e) => {
     e.preventDefault();
-    await axios.post("/messages/new", {
-      username: currentUser.name,
-      message: input,
-      timestamp: "2/2/12",
-      received: false,
-      roomId,
-    });
+    await axios.post(
+      "/messages/new",
+      {
+        username: currentUser.name,
+        message: input,
+        timestamp: "2/2/12",
+        received: false,
+        roomId,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${currentUser.token}`,
+        },
+      }
+    );
 
     setinput("");
   };
@@ -101,11 +107,20 @@ const Chat = () => {
   // All messages
   useEffect(() => {
     axios
-      .post("/messages/sync", { roomId })
+      .post(
+        "/messages/sync",
+        { roomId },
+        {
+          headers: {
+            Authorization: `Bearer ${currentUser.token}`,
+          },
+        }
+      )
       .then(({ data }) => setMessages(data))
       .catch((err) => console.log(err));
   }, [roomId]);
 
+  // Real Time part
   useEffect(() => {
     const pusher = new Pusher("3203ea64068316222fee", {
       cluster: "ap2",
@@ -126,10 +141,10 @@ const Chat = () => {
   return (
     <div className="chat">
       <div className="chat_header">
-        <Avatar />
+        <Avatar src={`${room.pic}`} />
 
         <div className="chat_headerInfo">
-          <h3>{roomName || "Room name"}</h3>
+          <h3>{room.name || "Room name"}</h3>
           <p>Last seen at</p>
         </div>
 

@@ -46,7 +46,10 @@ const Sidebar = () => {
     };
 
     apiReq()
-      .then((info) => setrooms(info))
+      .then((info) => {
+        setrooms(info);
+        localStorage.setItem("rooms", JSON.stringify(info));
+      })
       .catch((err) => console.log(err));
   }, [rooms]);
 

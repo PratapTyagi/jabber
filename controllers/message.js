@@ -2,13 +2,13 @@ import Message from "../models/messageModel.js";
 import Room from "../models/roomsModel.js";
 
 export const createMessage = (req, res) => {
-  const { username, message, timestamp, received, roomId } = req.body;
+  const { username, message, timestamp, roomId } = req.body;
 
   const data = new Message({
     username,
     message,
     timestamp,
-    received,
+    received: req.user._id,
   });
 
   try {

@@ -1,5 +1,11 @@
-import { useState, useEffect } from "react";
-import { SignUp, SignIn, DefaultChat, Chat, Sidebar } from "./components";
+import {
+  SignUp,
+  SignIn,
+  DefaultChat,
+  Chat,
+  Sidebar,
+  AllUsers,
+} from "./components";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 export const Routing = () => {
@@ -17,10 +23,18 @@ export const Routing = () => {
                   <DefaultChat />
                 </div>
               </Route>
-              <Route path="/rooms/:roomId">
+
+              <Route exact path="/rooms/:roomId">
                 <div className="app_body">
                   <Sidebar />
                   <Chat />
+                </div>
+              </Route>
+
+              <Route exact path="/rooms/:roomId/allusers">
+                <div className="app_body">
+                  <Sidebar />
+                  <AllUsers />
                 </div>
               </Route>
             </>

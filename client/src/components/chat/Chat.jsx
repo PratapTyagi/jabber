@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { Link, Route, useLocation, useParams } from "react-router-dom";
 
 import {
   Avatar,
@@ -22,15 +22,15 @@ import Pusher from "pusher-js";
 import "./Chat.css";
 
 const Chat = () => {
+  const { pathname } = useLocation();
+  const { roomId } = useParams();
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
   const [input, setinput] = useState("");
-  const { roomId } = useParams();
   const [room, setRoom] = useState({});
   const [open, setOpen] = useState(false);
-  const [users, setUsers] = useState([]);
-  const [openButton, setOpenButton] = useState(false);
   const [messages, setMessages] = useState([]);
 
+  // For select dropdown
   const handleClose = () => {
     setOpen(false);
   };
@@ -43,43 +43,7 @@ const Chat = () => {
     const rooms = JSON.parse(localStorage.getItem("rooms"));
     const data = rooms.filter((e) => e._id === roomId);
     setRoom(data[0]);
-  }, []);
-
-  // All user instead of members in room
-  const getAllUsers = async (e) => {
-    e.preventDefault();
-    await axios
-      .post(
-        "/users/allusers",
-        { roomId },
-        {
-          headers: {
-            Authorization: `Bearer ${currentUser.token}`,
-          },
-        }
-      )
-      .then(({ data }) => setUsers(data))
-      .catch((err) => console.log(err));
-  };
-
-  // Add user in room
-  const addUser = async (userId) => {
-    await axios
-      .post(
-        "/users/addUser",
-        {
-          roomId,
-          userId,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${currentUser.token}`,
-          },
-        }
-      )
-      .then((res) => setOpenButton(true))
-      .catch((err) => console.log(err));
-  };
+  }, [roomId]);
 
   const sendMessage = async (e) => {
     e.preventDefault();
@@ -162,7 +126,7 @@ const Chat = () => {
           <IconButton>
             <AttachFile />
           </IconButton>
-          <FormControl className="icon__form" onClick={getAllUsers}>
+          <FormControl className="icon__form">
             <Select
               labelId="demo-controlled-open-select-label"
               id="demo-controlled-open-select"
@@ -171,34 +135,16 @@ const Chat = () => {
               onOpen={handleOpen}
             >
               <MenuItem value="">
-                <strong className="addUsers">Add Users</strong>
+                <Link
+                  to={{
+                    pathname: `${pathname}/allusers`,
+                    state: { roomId, currentUser },
+                  }}
+                  style={{ textDecoration: "none" }}
+                >
+                  <strong className="addUsers">Add Users</strong>
+                </Link>
               </MenuItem>
-
-              {users.map((user) => (
-                <MenuItem key={user._id} className="addUsers__item">
-                  <div className="addUsers__item__left">
-                    <Avatar
-                      src={user.pic}
-                      alt="Dp"
-                      className="addUsers__item__avatar"
-                    />
-                    <div className="center">
-                      <h4>{user.name}</h4>
-                      <p>{user.email}</p>
-                    </div>
-                  </div>
-                  {!openButton ? (
-                    <button
-                      onClick={(e) => {
-                        e.preventDefault();
-                        addUser(user._id);
-                      }}
-                    >
-                      Add
-                    </button>
-                  ) : null}
-                </MenuItem>
-              ))}
             </Select>
           </FormControl>
         </div>

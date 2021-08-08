@@ -140,7 +140,10 @@ const Chat = () => {
                     pathname: `${pathname}/allusers`,
                     state: { roomId, currentUser },
                   }}
-                  style={{ textDecoration: "none" }}
+                  style={{
+                    textDecoration: "none",
+                    color: "rgb(46, 46, 46)",
+                  }}
                 >
                   <strong className="addUsers">Add Users</strong>
                 </Link>

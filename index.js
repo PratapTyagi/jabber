@@ -9,6 +9,8 @@ import users from "./routes/users.js";
 
 import keys from "./config/keys.js";
 
+import path from "path";
+
 const app = express();
 
 app.use(express.json({ extended: true }));
@@ -16,10 +18,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 const pusher = new Pusher(keys.PUSHER);
-
-app.get("/", (req, res) => {
-  res.send("hello");
-});
 
 app.use("/api/v1/messages", postMesssage);
 app.use("/api/v1/rooms", rooms);
@@ -62,6 +60,13 @@ mongoose
   .catch((e) => {
     console.log(e.message);
   });
+
+if (process.env.NODE_ENV === "production") {
+  app.use("/", express.static("client/build"));
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "client/build/index.html"));
+  });
+}
 
 // For getting no warnings in console
 mongoose.set("useFindAndModify", false);

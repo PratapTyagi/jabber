@@ -19,7 +19,7 @@ import "./Sidebar.css";
 const Sidebar = () => {
   const [rooms, setrooms] = useState([]);
   const [open, setOpen] = useState(false);
-  const token = JSON.parse(localStorage.getItem("currentUser")).token;
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 
   const handleClose = () => {
     setOpen(false);
@@ -39,7 +39,7 @@ const Sidebar = () => {
     const apiReq = async () => {
       const { data } = await axios.get("/rooms/sync", {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${currentUser.token}`,
         },
       });
       return data;
@@ -56,7 +56,16 @@ const Sidebar = () => {
   return (
     <div className="sidebar">
       <div className="sidebar_header">
-        <Avatar src="https://avatars.githubusercontent.com/u/45279411?v=4" />
+        <Avatar
+          src={
+            currentUser.pic ===
+            "https://res.cloudinary.com/dark-01/image/upload/v1623783636/pixlr-bg-result_sa4w7l.png"
+              ? `https://avatars.dicebear.com/api/human/${
+                  Math.random() * 5000
+                }.svg`
+              : currentUser.pic
+          }
+        />
         <div className="sidebar_headerRight">
           <IconButton>
             <DonutLargeSharp />
@@ -72,10 +81,9 @@ const Sidebar = () => {
               onClose={handleClose}
               onOpen={handleOpen}
             >
-              <MenuItem value="">
-                <em>None</em>
+              <MenuItem onClick={logOut}>
+                <h4>Logout</h4>
               </MenuItem>
-              <MenuItem onClick={logOut}>Logout</MenuItem>
             </Select>
           </FormControl>
         </div>

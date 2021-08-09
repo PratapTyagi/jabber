@@ -6,7 +6,7 @@ import {
   Sidebar,
   AllUsers,
 } from "./components";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { HashRouter as Router, Switch, Route } from "react-router-dom";
 
 export const Routing = () => {
   const currentUser = localStorage.getItem("currentUser");

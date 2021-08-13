@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Avatar } from "@material-ui/core";
-import axios from "../../../axios";
+import axios from "axios";
 
 import "./AllUsers.css";
 const AllUsers = () => {
@@ -14,7 +14,7 @@ const AllUsers = () => {
   useEffect(() => {
     const getAllUsers = async () =>
       await axios.post(
-        "/users/allusers",
+        "/api/v1/users/allusers",
         { roomId },
         {
           headers: {
@@ -31,7 +31,7 @@ const AllUsers = () => {
   const addUser = async (userId) => {
     await axios
       .post(
-        "/users/addUser",
+        "/api/v1/users/addUser",
         {
           roomId,
           userId,

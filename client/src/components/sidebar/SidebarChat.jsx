@@ -1,4 +1,4 @@
-import axios from "../../axios";
+import axios from "axios";
 import { Avatar } from "@material-ui/core";
 
 import "./SidebarChat.css";
@@ -12,7 +12,7 @@ const SidebarChat = ({ addNewChat, room }) => {
     if (fetchedName) {
       await axios
         .post(
-          "/rooms/new",
+          "/api/v1/rooms/new",
           {
             name: fetchedName,
           },

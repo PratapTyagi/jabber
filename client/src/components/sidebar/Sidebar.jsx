@@ -13,7 +13,7 @@ import {
 } from "@material-ui/icons";
 
 import SidebarChat from "./SidebarChat";
-import axios from "../../axios";
+import axios from "axios";
 import "./Sidebar.css";
 
 const Sidebar = () => {
@@ -37,7 +37,7 @@ const Sidebar = () => {
 
   useEffect(() => {
     const apiReq = async () => {
-      const { data } = await axios.get("/rooms/sync", {
+      const { data } = await axios.get("/api/v1/rooms/sync", {
         headers: {
           Authorization: `Bearer ${currentUser.token}`,
         },

@@ -16,7 +16,7 @@ import {
   Send,
 } from "@material-ui/icons";
 
-import axios from "../../axios";
+import axios from "axios";
 import Pusher from "pusher-js";
 
 import "./Chat.css";
@@ -56,7 +56,7 @@ const Chat = () => {
       timestamp.getMinutes() +
       (timestamp.getHours > 12 ? "PM" : "AM");
     await axios.post(
-      "/messages/new",
+      "/api/v1/messages/new",
       {
         username: currentUser.name,
         message: input,
@@ -79,7 +79,7 @@ const Chat = () => {
   useEffect(() => {
     axios
       .post(
-        "/messages/sync",
+        "/api/v1/messages/sync",
         { roomId },
         {
           headers: {

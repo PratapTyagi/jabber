@@ -25,7 +25,7 @@ const AllUsers = () => {
     getAllUsers()
       .then(({ data }) => setUsers(data))
       .catch((err) => console.log(err));
-  }, []);
+  }, [roomId, currentUser.token]);
 
   // Add user in room
   const addUser = async (userId) => {

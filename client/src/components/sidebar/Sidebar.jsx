@@ -51,7 +51,7 @@ const Sidebar = () => {
         localStorage.setItem("rooms", JSON.stringify(info));
       })
       .catch((err) => console.log(err));
-  }, [rooms]);
+  }, [rooms, currentUser.token]);
 
   return (
     <div className="sidebar">

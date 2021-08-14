@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link, Route, useLocation, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 
 import {
   Avatar,
@@ -89,7 +89,7 @@ const Chat = () => {
       )
       .then(({ data }) => setMessages(data))
       .catch((err) => console.log(err));
-  }, [roomId]);
+  }, [roomId, currentUser.token]);
 
   // Real Time part
   useEffect(() => {
@@ -161,7 +161,7 @@ const Chat = () => {
               m.received === currentUser._id && "chat_receiver"
             }`}
           >
-            {m.received != currentUser._id && (
+            {m.received !== currentUser._id && (
               <span className="chat_name">{m.username}</span>
             )}
             {m.message}
